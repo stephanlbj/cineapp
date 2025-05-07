@@ -13,6 +13,7 @@ export const MovieService = {
   async fetchMovies(page: number): Promise<MoviePage> {
     try {
       const { apiBaseUrl, apiKey } = getApiConfig();
+
       const response = await $fetch<MoviePage>(`${apiBaseUrl}/movie/popular`, {
         method: "GET",
         params: {

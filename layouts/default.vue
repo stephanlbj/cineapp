@@ -5,7 +5,9 @@
         CineApp
       </NuxtLink>
     </header>
-    <slot />
+    <div class="w-full sm:w-10/12 md:w-9/12 lg:w-8/12 mx-auto mt-10">
+      <slot />
+    </div>
   </div>
 </template>
 <style scoped lang="scss">

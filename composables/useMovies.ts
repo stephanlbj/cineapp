@@ -1,6 +1,6 @@
 import { ref } from 'vue'
-import { MovieService } from '@/services/MovieService'
-import type { Movie } from '@/domain/models/Movie'
+import { MovieService } from '~/application/services/MovieService'
+import type { Movie } from '~/domain/models/Movie'
 
 export function useMovies() {
   const films = ref<Movie[]>([])

@@ -22,20 +22,11 @@
       </div>
     </div>
 
-    <div
-      v-show="hasNextPage"
-      ref="loadMoreTrigger"
-      class="load-more-trigger"
-      style="height: 1px; background: transparent; margin-bottom: 100px"
-    >
+    <div v-show="hasNextPage" ref="loadMoreTrigger" class="load-more-trigger">
       <CustomMessage
         v-if="!hasNextPage && !isFetching && !isEmpty"
         text-props="Plus de résultats."
       />
-      <p v-if="error" class="error">
-        Erreur de chargement : {{ error.message }}
-        <button @click="() => refetch()">Réessayer</button>
-      </p>
     </div>
   </main>
 </template>
@@ -45,11 +36,22 @@ import { useMovieQuery } from '~/composables/useMovieQuery'
 import { useInfiniteScroll } from '~/composables/useInfiniteScroll'
 import { useHydrationState } from '~/composables/useHydrationState'
 import CustomMessage from './CustomMessage.vue'
+import type { FetchOptions } from '~/types/fetchOptions'
+const config = useRuntimeConfig()
 
 const loadMoreTrigger = ref(null)
 
-const { formattedPosts, fetchNextPage, hasNextPage, isFetching, error, refetch, isEmpty } =
-  useMovieQuery()
+const options: FetchOptions = {
+  method: 'GET',
+  params: {
+    language: 'fr-FR',
+  },
+}
+
+const { formattedPosts, fetchNextPage, hasNextPage, isFetching, refetch, isEmpty } = useMovieQuery({
+  ...options,
+  public: config.public,
+})
 
 const { isLoadingMore } = useInfiniteScroll(loadMoreTrigger, hasNextPage, isFetching, fetchNextPage)
 const { isHydrated } = useHydrationState()

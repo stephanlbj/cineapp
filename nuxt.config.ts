@@ -1,13 +1,12 @@
 import tailwindcss from '@tailwindcss/vite'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
-const API_URL = 'https://api.themoviedb.org/3'
-
 export default defineNuxtConfig({
   runtimeConfig: {
+    tmdbAccessToken: process.env.NUXT_TMDB_ACCESS_TOKEN,
     public: {
-      tmdbApiKey: process.env.TMDB_API_KEY,
-      apiBaseUrl: API_URL,
+      apiBaseUrl: process.env.NUXT_API_URL,
+      tmdbApiKey: process.env.NUXT_TMDB_API_KEY,
     },
   },
   compatibilityDate: '2024-11-01',

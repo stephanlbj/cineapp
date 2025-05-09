@@ -1,9 +1,20 @@
 import { useInfiniteQuery } from '@tanstack/vue-query'
-import { MovieService } from '@/services/MovieService'
+import { MovieService } from '~/application/services/MovieService'
 import type { MoviePage } from '~/domain/models/Movie'
+import type { FetchOptions } from '~/types/fetchOptions'
 
-export function useMovieQuery() {
-  const { data: initialData } = useAsyncData('movies', () => MovieService.fetchMovies(1))
+export function useMovieQuery(
+  optionsWithConfig: FetchOptions & { public: { apiBaseUrl: string; tmdbApiKey: string } },
+) {
+  const { public: publicConfig, ...options } = optionsWithConfig
+
+  const { data: initialData } = useAsyncData(
+    'movies',
+    () => MovieService.fetchMovies(1, publicConfig, options),
+    {
+      server: true,
+    },
+  )
 
   const { data, fetchNextPage, hasNextPage, isFetching, error, refetch } = useInfiniteQuery<
     MoviePage,
@@ -12,7 +23,11 @@ export function useMovieQuery() {
     queryKey: ['movies'],
     queryFn: async ({ pageParam = 1 }) => {
       const page = typeof pageParam === 'number' ? pageParam : 1
-      return await MovieService.fetchMovies(page)
+      if (page === 1 && initialData.value) {
+        return initialData.value
+      } else {
+        return await MovieService.fetchMovies(page, publicConfig, options)
+      }
     },
     getNextPageParam: (lastPage, pages) => {
       return pages.length < lastPage.total_pages ? pages.length + 1 : undefined

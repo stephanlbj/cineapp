@@ -5,6 +5,6 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   nuxtApp.provide('apiConfig', {
     apiBaseUrl: config.public.apiBaseUrl,
-    apiKey: config.public.apiKey,
+    apiKey: config.public.tmdbApiKey,
   })
 })

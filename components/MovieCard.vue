@@ -1,5 +1,10 @@
 <template>
-  <NuxtLink :to="`/movie/${props.movie.id}`" class="movie-card">
+  <NuxtLink
+    :to="`/movie/${props.movie.id}`"
+    class="movie-card"
+    aria-label="Détails du film {{ props.movie.title }}"
+    role="link"
+  >
     <div class="poster-wrapper">
       <NuxtImg
         :src="imageUrl"
@@ -28,12 +33,13 @@
 import type { Movie } from '~/domain/models/Movie'
 import { useDateFormatter } from '~/composables/useDateFormatter'
 
+const { formatDate } = useDateFormatter()
+
 const props = defineProps<{
   movie: Movie
 }>()
 
-const { formatDate } = useDateFormatter()
-const fallbackImage = '/images/placeholder.png'
+const fallbackImage = '/images/404img.jpg'
 const imageUrl = computed(() =>
   props.movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${props.movie.poster_path}`

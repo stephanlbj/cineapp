@@ -1,5 +1,5 @@
 export interface Comment {
-  movieId: number;
-  message: string;
-  date: number;
+  movieId: number
+  message: string
+  date: number
 }

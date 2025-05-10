@@ -1,9 +1,10 @@
 import { defineEventHandler } from 'h3'
 import { z } from 'zod'
 import { MovieService } from '~/application/services/MovieService'
+import type { Cast, Genre } from '~/domain/models/Movie'
 import { validateRouterParams } from '~/server/utils/validateRouterParams'
 import type { FetchOptions } from '~/types/fetchOptions'
-import type { Movie } from '@/domain/models/Movie'
+import type { Crew } from '~/types/movies'
 
 const paramsSchema = z.object({
   id: z.string().regex(/^\d+$/).transform(Number),
@@ -27,16 +28,53 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const movieDetails: Movie | null = await MovieService.getMovieDetails(
-      validatedParams.id,
-      publicConfig,
-      options,
-    )
-    return movieDetails
+    const [movieInfos, movieCredits] = await Promise.all([
+      MovieService.getMovieDetails(validatedParams.id, publicConfig, options),
+      MovieService.getMovieCredits(validatedParams.id, publicConfig, options),
+    ])
+
+    if (!movieInfos) {
+      throw createError({
+        statusCode: 404,
+        statusMessage: 'Film non trouvé',
+      })
+    }
+
+    const stars =
+      movieCredits?.cast
+        ?.sort((a: Cast, b: Cast) => a.order - b.order)
+        ?.map((actor: Cast) => actor.name)
+        .join(' , ') ?? 'Non disponibles'
+    const director =
+      movieCredits?.crew
+        .filter((member: Crew) => member.job === 'Director')
+        .map((director) => director.name)
+        .join(' , ') ?? 'Non disponibles'
+    const categories =
+      movieInfos.genres.map((genre: Genre) => genre.name).join(', ') ?? 'Non disponibles'
+    const noteTMDB = movieInfos.vote_average ?? 'Non disponible'
+    const nombreVotants = movieInfos.vote_count ?? 'Non disponible'
+
+    return {
+      ...movieInfos,
+      director,
+      stars,
+      categories,
+      noteTMDB,
+      nombreVotants,
+    }
   } catch (error) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: `Impossible de récupérer les détails du film ${error}`,
-    })
+    if (error instanceof Error) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: `Impossible de récupérer les détails du film: ${error.message}`,
+      })
+    } else {
+      throw createError({
+        statusCode: 500,
+        statusMessage:
+          'Une erreur inconnue est survenue lors de la récupération des détails du film.',
+      })
+    }
   }
 })

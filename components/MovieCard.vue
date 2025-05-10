@@ -2,6 +2,9 @@
 import type { Movie } from '~/domain/models/Movie'
 import { useDateFormatter } from '~/composables/useDateFormatter'
 import { useScrollStore } from '~/store/scrollStore'
+import { useImageUrl } from '~/composables/useImageUrl'
+import { useFormattedText } from '~/composables/useFormattedText'
+
 const scrollStore = useScrollStore()
 const { formatDate } = useDateFormatter()
 
@@ -15,20 +18,9 @@ const saveScrollPosition = () => {
   }
 }
 
-const fallbackImage = '/images/404img.jpg'
-const imageUrl = computed(() =>
-  props.movie.poster_path
-    ? `https://image.tmdb.org/t/p/w500${props.movie.poster_path}`
-    : fallbackImage,
-)
+const imageUrl = useImageUrl(props.movie.poster_path)
 
-const formattedTitle = computed(() => {
-  const isMobile = window.innerWidth <= 640
-  const maxLength = isMobile ? 50 : 20
-  return props.movie.title.length > maxLength
-    ? props.movie.title.slice(0, maxLength) + '...'
-    : props.movie.title
-})
+const formattedTitle = useFormattedText(props.movie.title)
 </script>
 
 <template>

@@ -1,6 +1,7 @@
-import type { Movie, MoviePage } from '~/domain/models/Movie'
+import type { Movie, MovieDetailsFull, MoviePage } from '~/domain/models/Movie'
 import { ApiService } from '~/infrastructure/services/ApiService'
 import type { FetchOptions } from '~/types/fetchOptions'
+import type { MovieCredits } from '~/types/movies'
 
 export const MovieService = {
   async fetchMovies(page: number, apiBaseUrl: string, options: FetchOptions): Promise<MoviePage> {
@@ -31,8 +32,17 @@ export const MovieService = {
     id: number,
     { apiBaseUrl }: { apiBaseUrl: string },
     options: FetchOptions = {},
-  ): Promise<Movie | null> {
+  ): Promise<MovieDetailsFull | null> {
     const url = `${apiBaseUrl}/movie/${id}`
-    return await ApiService.fetchData<Movie>(url, options)
+    return await ApiService.fetchData<MovieDetailsFull>(url, options)
+  },
+
+  async getMovieCredits(
+    id: number,
+    { apiBaseUrl }: { apiBaseUrl: string },
+    options: FetchOptions = {},
+  ): Promise<MovieCredits | null> {
+    const url = `${apiBaseUrl}/movie/${id}/credits`
+    return await ApiService.fetchData<MovieCredits>(url, options)
   },
 }

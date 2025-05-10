@@ -40,18 +40,26 @@ export default defineEventHandler(async (event) => {
       })
     }
 
+    const castList: Cast[] = movieCredits && movieCredits.cast ? movieCredits.cast : []
+    const crewList: Crew[] = movieCredits && movieCredits.crew ? movieCredits.crew : []
+
     const stars =
-      movieCredits?.cast
-        ?.sort((a: Cast, b: Cast) => a.order - b.order)
-        ?.map((actor: Cast) => actor.name)
-        .join(' , ') ?? 'Non disponibles'
+      castList
+        .sort((a: Cast, b: Cast) => a.order - b.order)
+        .map((actor: Cast) => actor.name)
+        .join(', ') || 'Non disponibles'
+
     const director =
-      movieCredits?.crew
+      crewList
         .filter((member: Crew) => member.job === 'Director')
         .map((director) => director.name)
-        .join(' , ') ?? 'Non disponibles'
+        .join(', ') || 'Non disponibles'
+
     const categories =
-      movieInfos.genres.map((genre: Genre) => genre.name).join(', ') ?? 'Non disponibles'
+      movieInfos.genres && movieInfos.genres.length > 0
+        ? movieInfos.genres.map((genre: Genre) => genre.name).join(', ')
+        : 'Non disponibles'
+
     const noteTMDB = movieInfos.vote_average ?? 'Non disponible'
     const nombreVotants = movieInfos.vote_count ?? 'Non disponible'
 

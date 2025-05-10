@@ -15,5 +15,11 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  modules: ['@nuxt/eslint', '@nuxt/image', '@hebilicious/vue-query-nuxt', '@vueuse/motion/nuxt'],
+  modules: [
+    '@nuxt/eslint',
+    '@nuxt/image',
+    '@hebilicious/vue-query-nuxt',
+    '@vueuse/motion/nuxt',
+    '@pinia/nuxt',
+  ],
 })

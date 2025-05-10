@@ -1,3 +1,29 @@
+<script setup lang="ts">
+import { useRoute, useRouter, useAsyncData } from 'nuxt/app'
+import { ref } from 'vue'
+import type { Movie } from '~/domain/models/Movie'
+
+const route = useRoute()
+const router = useRouter()
+const movieId = ref<number>(Number(route.params.id))
+
+const { data, error } = useAsyncData(
+  `movie-${movieId.value}`,
+  async () => await $fetch<Movie>(`/api/movieDetails/${movieId.value}`),
+  {
+    watch: [movieId],
+    lazy: true,
+  },
+)
+
+if (error.value) {
+  console.error('Erreur lors de la récupération des détails du film:', error.value)
+}
+
+const goBack = () => {
+  router.push('/')
+}
+</script>
 <template>
   <div class="w-full mx-auto">
     <button class="back-button" aria-label="Retour à la liste des films" @click="goBack">
@@ -16,35 +42,6 @@
     <p>{{ data }}</p>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useRoute, useRouter, useAsyncData } from 'nuxt/app'
-import { ref } from 'vue'
-import type { Movie } from '~/domain/models/Movie'
-
-const route = useRoute()
-const router = useRouter()
-const movieId = ref<number>(Number(route.params.id))
-
-const { data, error } = useAsyncData(
-  'movieDetails',
-  async () => {
-    return await $fetch<Movie>(`/api/movieDetails/${movieId.value}`)
-  },
-  {
-    watch: [movieId],
-    server: true,
-  },
-)
-
-if (error.value) {
-  console.error('Erreur lors de la récupération des détails du film:', error.value)
-}
-
-const goBack = () => {
-  router.push('/')
-}
-</script>
 
 <style scoped>
 .back-button {

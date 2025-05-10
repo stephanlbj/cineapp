@@ -1,9 +1,43 @@
+<script setup lang="ts">
+import type { Movie } from '~/domain/models/Movie'
+import { useDateFormatter } from '~/composables/useDateFormatter'
+import { useScrollStore } from '~/store/scrollStore'
+const scrollStore = useScrollStore()
+const { formatDate } = useDateFormatter()
+
+const props = defineProps<{
+  movie: Movie
+}>()
+
+const saveScrollPosition = () => {
+  if (import.meta.client) {
+    scrollStore.savePosition('/products', window.scrollY)
+  }
+}
+
+const fallbackImage = '/images/404img.jpg'
+const imageUrl = computed(() =>
+  props.movie.poster_path
+    ? `https://image.tmdb.org/t/p/w500${props.movie.poster_path}`
+    : fallbackImage,
+)
+
+const formattedTitle = computed(() => {
+  const isMobile = window.innerWidth <= 640
+  const maxLength = isMobile ? 50 : 20
+  return props.movie.title.length > maxLength
+    ? props.movie.title.slice(0, maxLength) + '...'
+    : props.movie.title
+})
+</script>
+
 <template>
   <NuxtLink
     :to="`/movie/${props.movie.id}`"
     class="movie-card"
     aria-label="Détails du film {{ props.movie.title }}"
     role="link"
+    @click="saveScrollPosition"
   >
     <div class="poster-wrapper">
       <NuxtImg
@@ -29,55 +63,6 @@
   </NuxtLink>
 </template>
 
-<script setup lang="ts">
-import type { Movie } from '~/domain/models/Movie'
-import { useDateFormatter } from '~/composables/useDateFormatter'
-//import { onMounted } from 'vue'
-const { formatDate } = useDateFormatter()
-
-const props = defineProps<{
-  movie: Movie
-}>()
-
-const fallbackImage = '/images/404img.jpg'
-const imageUrl = computed(() =>
-  props.movie.poster_path
-    ? `https://image.tmdb.org/t/p/w500${props.movie.poster_path}`
-    : fallbackImage,
-)
-
-const formattedTitle = computed(() => {
-  const isMobile = window.innerWidth <= 640
-  const maxLength = isMobile ? 50 : 20
-  return props.movie.title.length > maxLength
-    ? props.movie.title.slice(0, maxLength) + '...'
-    : props.movie.title
-})
-// const saveScrollPosition = (movieId: number) => {
-//   sessionStorage.setItem('lastViewedMovieId', movieId.toString())
-// }
-
-// onMounted(() => {
-//   const lastViewedProductId = sessionStorage.getItem('lastViewedProductId')
-
-//   if (lastViewedProductId) {
-//     const productElement = document.getElementById(`product-${lastViewedProductId}`)
-//     if (productElement) {
-//       productElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
-
-//       setTimeout(() => {
-//         productElement.classList.add('highlight')
-//       }, 300)
-
-//       setTimeout(() => {
-//         productElement.classList.remove('highlight')
-//       }, 1500)
-
-//       sessionStorage.removeItem('lastViewedProductId')
-//     }
-//   }
-// })
-</script>
 <style scoped lang="scss">
 .movie-card {
   display: flex;

@@ -1,3 +1,5 @@
 <template>
-  <MovieList />
+  <div>
+    <MovieList />
+  </div>
 </template>

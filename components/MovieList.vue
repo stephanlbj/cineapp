@@ -1,3 +1,28 @@
+<script setup lang="ts">
+import { useMovieQuery } from '~/composables/useMovieQuery'
+import { useHydrationState } from '~/composables/useHydrationState'
+import CustomMessage from './CustomMessage.vue'
+import type { FetchOptions } from '~/types/fetchOptions'
+const config = useRuntimeConfig()
+
+const loadMoreTrigger = ref(null)
+
+const options: FetchOptions = {
+  method: 'GET',
+  params: {
+    api_key: config.public.tmdbApiKey,
+    language: 'fr-FR',
+  },
+}
+
+const { formattedPosts, fetchNextPage, hasNextPage, isFetching, refetch, isEmpty } = useMovieQuery(
+  options,
+  config.public.apiBaseUrl,
+)
+const { isLoadingMore } = useInfiniteScroll(loadMoreTrigger, hasNextPage, isFetching, fetchNextPage)
+const { isHydrated } = useHydrationState()
+</script>
+
 <template>
   <main class="w-full">
     <div v-if="!isHydrated" class="skeleton-wrapper">
@@ -32,30 +57,6 @@
   </main>
 </template>
 
-<script setup lang="ts">
-import { useMovieQuery } from '~/composables/useMovieQuery'
-import { useHydrationState } from '~/composables/useHydrationState'
-import CustomMessage from './CustomMessage.vue'
-import type { FetchOptions } from '~/types/fetchOptions'
-const config = useRuntimeConfig()
-
-const loadMoreTrigger = ref(null)
-
-const options: FetchOptions = {
-  method: 'GET',
-  params: {
-    api_key: config.public.tmdbApiKey,
-    language: 'fr-FR',
-  },
-}
-
-const { formattedPosts, fetchNextPage, hasNextPage, isFetching, refetch, isEmpty } = useMovieQuery(
-  options,
-  config.public.apiBaseUrl,
-)
-const { isLoadingMore } = useInfiniteScroll(loadMoreTrigger, hasNextPage, isFetching, fetchNextPage)
-const { isHydrated } = useHydrationState()
-</script>
 <style lang="scss" scoped>
 .posts-section {
   display: grid;
@@ -78,7 +79,7 @@ const { isHydrated } = useHydrationState()
 }
 
 .load-more-trigger {
-  height: 20px; // Augmenter la taille pour l'observer correctement
+  height: 20px;
   margin-bottom: 2rem;
 }
 </style>

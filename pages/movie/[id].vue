@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="w-full mx-auto">
     <button class="back-button" aria-label="Retour à la liste des films" @click="goBack">
       ⬅️ Retour
     </button>
@@ -41,14 +41,8 @@ if (error.value) {
   console.error('Erreur lors de la récupération des détails du film:', error.value)
 }
 
-const goBack = async () => {
-  if (import.meta.client) {
-    console.log('goBack exécuté côté client. Scroll position:', window.scrollY)
-    sessionStorage.setItem('scrollPosition', window.scrollY.toString())
-    await router.push('/')
-  } else {
-    console.log('goBack tenté côté serveur (ce qui ne devrait pas arriver sur un clic).')
-  }
+const goBack = () => {
+  router.push('/')
 }
 </script>
 

@@ -3,17 +3,12 @@ import { ApiService } from '~/infrastructure/services/ApiService'
 import type { FetchOptions } from '~/types/fetchOptions'
 
 export const MovieService = {
-  async fetchMovies(
-    page: number,
-    { apiBaseUrl, tmdbApiKey }: { apiBaseUrl: string; tmdbApiKey: string },
-    options: FetchOptions,
-  ): Promise<MoviePage> {
+  async fetchMovies(page: number, apiBaseUrl: string, options: FetchOptions): Promise<MoviePage> {
     const url = `${apiBaseUrl}/movie/popular`
     if (!options.params) {
       options.params = {}
     }
     options.params.page = page
-    options.params.api_key = tmdbApiKey
 
     const response = await ApiService.fetchData<MoviePage>(url, options)
     return response

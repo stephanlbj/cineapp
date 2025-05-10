@@ -3,14 +3,10 @@ import { MovieService } from '~/application/services/MovieService'
 import type { MoviePage } from '~/domain/models/Movie'
 import type { FetchOptions } from '~/types/fetchOptions'
 
-export function useMovieQuery(
-  optionsWithConfig: FetchOptions & { public: { apiBaseUrl: string; tmdbApiKey: string } },
-) {
-  const { public: publicConfig, ...options } = optionsWithConfig
-
+export function useMovieQuery(optionsWithConfig: FetchOptions, apiBaseUrl: string) {
   const { data: initialData } = useAsyncData(
     'movies',
-    () => MovieService.fetchMovies(1, publicConfig, options),
+    () => MovieService.fetchMovies(1, apiBaseUrl, optionsWithConfig),
     {
       server: true,
     },
@@ -26,7 +22,7 @@ export function useMovieQuery(
       if (page === 1 && initialData.value) {
         return initialData.value
       } else {
-        return await MovieService.fetchMovies(page, publicConfig, options)
+        return await MovieService.fetchMovies(page, apiBaseUrl, optionsWithConfig)
       }
     },
     getNextPageParam: (lastPage, pages) => {

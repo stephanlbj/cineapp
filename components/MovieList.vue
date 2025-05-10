@@ -11,7 +11,12 @@
       </div>
       <section v-else>
         <ul class="posts-section">
-          <li v-for="(movie, index) in formattedPosts" :key="movie.id" class="movie-item">
+          <li
+            v-for="(movie, index) in formattedPosts"
+            :id="'movie-' + movie.id"
+            :key="movie.id"
+            class="movie-item"
+          >
             <MovieCard :movie="movie" :index="index" />
           </li>
         </ul>
@@ -20,20 +25,15 @@
       <div v-if="isLoadingMore" class="infinite-skeleton-wrapper">
         <SkeletonLoader v-for="n in 5" :key="n" />
       </div>
-    </div>
 
-    <div v-show="hasNextPage" ref="loadMoreTrigger" class="load-more-trigger">
-      <CustomMessage
-        v-if="!hasNextPage && !isFetching && !isEmpty"
-        text-props="Plus de résultats."
-      />
+      <!-- Trigger pour le scroll infini -->
+      <div v-show="hasNextPage" ref="loadMoreTrigger" class="load-more-trigger" />
     </div>
   </main>
 </template>
 
 <script setup lang="ts">
 import { useMovieQuery } from '~/composables/useMovieQuery'
-import { useInfiniteScroll } from '~/composables/useInfiniteScroll'
 import { useHydrationState } from '~/composables/useHydrationState'
 import CustomMessage from './CustomMessage.vue'
 import type { FetchOptions } from '~/types/fetchOptions'
@@ -44,19 +44,18 @@ const loadMoreTrigger = ref(null)
 const options: FetchOptions = {
   method: 'GET',
   params: {
+    api_key: config.public.tmdbApiKey,
     language: 'fr-FR',
   },
 }
 
-const { formattedPosts, fetchNextPage, hasNextPage, isFetching, refetch, isEmpty } = useMovieQuery({
-  ...options,
-  public: config.public,
-})
-
+const { formattedPosts, fetchNextPage, hasNextPage, isFetching, refetch, isEmpty } = useMovieQuery(
+  options,
+  config.public.apiBaseUrl,
+)
 const { isLoadingMore } = useInfiniteScroll(loadMoreTrigger, hasNextPage, isFetching, fetchNextPage)
 const { isHydrated } = useHydrationState()
 </script>
-
 <style lang="scss" scoped>
 .posts-section {
   display: grid;
@@ -76,5 +75,10 @@ const { isHydrated } = useHydrationState()
 
 .movie-item {
   list-style: none;
+}
+
+.load-more-trigger {
+  height: 20px; // Augmenter la taille pour l'observer correctement
+  margin-bottom: 2rem;
 }
 </style>

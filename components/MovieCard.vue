@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import type { Movie } from '~/domain/models/Movie'
 import { useDateFormatter } from '~/composables/useDateFormatter'
-
+//import { onMounted } from 'vue'
 const { formatDate } = useDateFormatter()
 
 const props = defineProps<{
@@ -53,6 +53,30 @@ const formattedTitle = computed(() => {
     ? props.movie.title.slice(0, maxLength) + '...'
     : props.movie.title
 })
+// const saveScrollPosition = (movieId: number) => {
+//   sessionStorage.setItem('lastViewedMovieId', movieId.toString())
+// }
+
+// onMounted(() => {
+//   const lastViewedProductId = sessionStorage.getItem('lastViewedProductId')
+
+//   if (lastViewedProductId) {
+//     const productElement = document.getElementById(`product-${lastViewedProductId}`)
+//     if (productElement) {
+//       productElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+
+//       setTimeout(() => {
+//         productElement.classList.add('highlight')
+//       }, 300)
+
+//       setTimeout(() => {
+//         productElement.classList.remove('highlight')
+//       }, 1500)
+
+//       sessionStorage.removeItem('lastViewedProductId')
+//     }
+//   }
+// })
 </script>
 <style scoped lang="scss">
 .movie-card {

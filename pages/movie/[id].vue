@@ -6,6 +6,7 @@ import { useImageUrl } from '~/composables/useImageUrl'
 import { useMovieStore } from '~/stores/useMovieStore'
 import FormComponent from '~/components/FormComponent.vue'
 import CommentList from '~/components/CommentList.vue'
+import CustomFallBack from '~/components/CustomFallBack.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -149,12 +150,9 @@ const goBack = () => {
 
       <ClientOnly>
         <template #fallback>
-          <div class="mt-6">
-            <p class="text-gray-600 italic text-center flex justify-center text-2xl">
-              Chargement...
-            </p>
-          </div>
+          <CustomFallBack message="Chargement..." />
         </template>
+
         <CommentList :movie-id="movieId" />
         <FormComponent :movie-id="movieId" />
       </ClientOnly>

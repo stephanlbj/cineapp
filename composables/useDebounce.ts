@@ -1,11 +1,10 @@
 import { ref, watch } from 'vue'
 
-export function useDebounce(value: string, delay: number = 500) {
-  const inputValue = ref(value)
-  const debouncedValue = ref(value)
+export function useDebounce<T>(value: Ref<T>, delay: number = 500): Ref<T> {
+  const debouncedValue = ref(value.value) as Ref<T>
   let timeout: ReturnType<typeof setTimeout>
 
-  watch(inputValue, (newValue) => {
+  watch(value, (newValue) => {
     if (timeout) {
       clearTimeout(timeout)
     }
@@ -14,8 +13,6 @@ export function useDebounce(value: string, delay: number = 500) {
       debouncedValue.value = newValue
     }, delay)
   })
-
-  inputValue.value = value
 
   return debouncedValue
 }

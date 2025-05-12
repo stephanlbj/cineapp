@@ -9,6 +9,10 @@ const {
   modelValue: propModelValue,
   rules,
   type,
+  variant,
+  rounded,
+  prependInnerIcon,
+  hideDetails,
 } = defineProps({
   modelValue: {
     type: [String, Number],
@@ -27,6 +31,22 @@ const {
     default: () => [],
   },
   disabled: {
+    type: Boolean,
+    default: false,
+  },
+  variant: {
+    type: String as PropType<'outlined' | 'solo' | 'underlined' | 'filled'>,
+    default: 'solo',
+  },
+  rounded: {
+    type: [Boolean, String],
+    default: false,
+  },
+  prependInnerIcon: {
+    type: String,
+    default: undefined,
+  },
+  hideDetails: {
     type: Boolean,
     default: false,
   },
@@ -61,5 +81,9 @@ watch(
     :disabled="disabled"
     class="border-none"
     v-bind="attrs"
+    :variant="variant"
+    :rounded="rounded"
+    :prepend-inner-icon="prependInnerIcon"
+    :hide-details="hideDetails"
   />
 </template>

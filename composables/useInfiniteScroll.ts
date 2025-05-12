@@ -19,7 +19,7 @@ export function useInfiniteScroll(
     observer.value = new IntersectionObserver(
       (entries) => {
         const isVisible = entries[0]?.isIntersecting
-        if (isVisible && hasNextPage.value && !isFetching.value) {
+        if (isVisible && hasNextPage.value && !isFetching.value && !isLoadingMore.value) {
           isLoadingMore.value = true
           fetchNextPage().finally(() => {
             isLoadingMore.value = false

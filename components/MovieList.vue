@@ -1,40 +1,27 @@
 <script setup lang="ts">
-import { useMovieQuery } from '~/composables/useMovieQuery'
-//import { useHydrationState } from '~/composables/useHydrationState'
+import type { Movie } from '~/domain/models/Movie'
 import CustomMessage from './CustomMessage.vue'
-import type { FetchOptions } from '~/types/fetchOptions'
-import { movieEndpoints } from '~/infrastructure/api/movieEndpoints'
-const config = useRuntimeConfig()
+import { useInfiniteScroll } from '~/composables/useInfiniteScroll'
+import type { InfiniteQueryObserverResult } from '@tanstack/vue-query'
+
+const props = defineProps<{
+  movies: Movie[]
+  isLoading: boolean
+  isEmpty: boolean
+  fetchNextPage: () => Promise<InfiniteQueryObserverResult>
+  hasNextPage: boolean
+  isFetching: boolean
+}>()
 
 const loadMoreTrigger = ref(null)
-
-const options: FetchOptions = {
-  method: 'GET',
-  params: {
-    api_key: config.public.tmdbApiKey,
-    language: 'fr-FR',
-  },
-}
-
-const { formattedPosts, fetchNextPage, hasNextPage, isFetching, refetch, isEmpty } = useMovieQuery(
-  options,
-  config.public.apiBaseUrl + movieEndpoints.popular,
+const hasNextPageRef = computed(() => props.hasNextPage)
+const isFetchingRef = computed(() => props.isFetching)
+const { isLoadingMore: loadingMore } = useInfiniteScroll(
+  loadMoreTrigger,
+  hasNextPageRef,
+  isFetchingRef,
+  props.fetchNextPage,
 )
-const { isLoadingMore } = useInfiniteScroll(loadMoreTrigger, hasNextPage, isFetching, fetchNextPage)
-//const { isHydrated } = useHydrationState()
-const isClientHydrated = ref(false)
-
-onMounted(() => {
-  // Hydratation complète côté client
-  isClientHydrated.value = true
-})
-const isLoading = computed(() => {
-  // Si le client n'est pas encore hydraté
-  if (!isClientHydrated.value) return true
-
-  // Si les données ne sont pas encore là et que le fetch est en cours
-  return isFetching && formattedPosts.value.length === 0
-})
 </script>
 
 <template>
@@ -46,12 +33,11 @@ const isLoading = computed(() => {
     <div v-else>
       <div v-if="isEmpty" class="no-results">
         <CustomMessage text-props="Aucun post trouvé" />
-        <button @click="() => refetch()">Recharger</button>
       </div>
       <section v-else>
         <ul class="posts-section">
           <li
-            v-for="(movie, index) in formattedPosts"
+            v-for="(movie, index) in props.movies"
             :id="'movie-' + movie.id"
             :key="movie.id"
             class="movie-item"
@@ -61,7 +47,7 @@ const isLoading = computed(() => {
         </ul>
       </section>
 
-      <div v-if="isLoadingMore" class="skeleton-wrapper">
+      <div v-if="loadingMore" class="skeleton-wrapper">
         <SkeletonLoader v-for="n in 10" :key="n" />
       </div>
 

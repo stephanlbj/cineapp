@@ -1,6 +1,6 @@
 export const movieEndpoints = {
   popular: '/movie/popular',
-  search: '/search/movie',
+  search: '/search/movie?query=',
   details: '/movie/',
   credits: '/movie/',
 }

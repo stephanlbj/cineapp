@@ -1,4 +1,4 @@
-import { useScrollStore } from '~/store/scrollStore'
+import { useScrollStore } from '~/stores/useScrollStore'
 import { useRouter } from 'vue-router'
 
 export default defineNuxtPlugin(() => {

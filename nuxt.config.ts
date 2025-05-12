@@ -11,7 +11,15 @@ export default defineNuxtConfig({
   },
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
-  css: ['~/assets/styles/main.scss', '~/assets/css/main.css'],
+  css: [
+    '~/assets/styles/main.scss',
+    '~/assets/css/main.css',
+    '@mdi/font/css/materialdesignicons.css',
+    'vuetify/styles',
+  ],
+  build: {
+    transpile: ['vuetify'],
+  },
   vite: {
     plugins: [tailwindcss()],
   },

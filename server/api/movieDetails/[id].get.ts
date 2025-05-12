@@ -5,6 +5,7 @@ import type { Cast, Genre } from '~/domain/models/Movie'
 import { validateRouterParams } from '~/server/utils/validateRouterParams'
 import type { FetchOptions } from '~/types/fetchOptions'
 import type { Crew } from '~/types/movies'
+import { movieEndpoints } from '~/infrastructure/api/movieEndpoints'
 
 const paramsSchema = z.object({
   id: z.string().regex(/^\d+$/).transform(Number),
@@ -27,10 +28,13 @@ export default defineEventHandler(async (event) => {
     },
   }
 
+  const movieDetailUrl = `${publicConfig.apiBaseUrl}${movieEndpoints.details}${validatedParams.id}`
+  const movieCreditUrl = `${publicConfig.apiBaseUrl}${movieEndpoints.credits}${validatedParams.id}/credits`
+
   try {
     const [movieInfos, movieCredits] = await Promise.all([
-      MovieService.getMovieDetails(validatedParams.id, publicConfig, options),
-      MovieService.getMovieCredits(validatedParams.id, publicConfig, options),
+      MovieService.getMovieDetails(movieDetailUrl, options),
+      MovieService.getMovieCredits(movieCreditUrl, options),
     ])
 
     if (!movieInfos) {

@@ -1,11 +1,10 @@
 import type { Movie, MovieDetailsFull, MoviePage } from '~/domain/models/Movie'
-import { ApiService } from '~/infrastructure/services/ApiService'
+import { ApiService } from '~/infrastructure/api/ApiService'
 import type { FetchOptions } from '~/types/fetchOptions'
 import type { MovieCredits } from '~/types/movies'
 
 export const MovieService = {
-  async fetchMovies(page: number, apiBaseUrl: string, options: FetchOptions): Promise<MoviePage> {
-    const url = `${apiBaseUrl}/movie/popular`
+  async fetchMovies(page: number, url: string, options: FetchOptions): Promise<MoviePage> {
     if (!options.params) {
       options.params = {}
     }
@@ -28,21 +27,11 @@ export const MovieService = {
     return response.results
   },
 
-  async getMovieDetails(
-    id: number,
-    { apiBaseUrl }: { apiBaseUrl: string },
-    options: FetchOptions = {},
-  ): Promise<MovieDetailsFull | null> {
-    const url = `${apiBaseUrl}/movie/${id}`
+  async getMovieDetails(url: string, options: FetchOptions = {}): Promise<MovieDetailsFull | null> {
     return await ApiService.fetchData<MovieDetailsFull>(url, options)
   },
 
-  async getMovieCredits(
-    id: number,
-    { apiBaseUrl }: { apiBaseUrl: string },
-    options: FetchOptions = {},
-  ): Promise<MovieCredits | null> {
-    const url = `${apiBaseUrl}/movie/${id}/credits`
+  async getMovieCredits(url: string, options: FetchOptions = {}): Promise<MovieCredits | null> {
     return await ApiService.fetchData<MovieCredits>(url, options)
   },
 }

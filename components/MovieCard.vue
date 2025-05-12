@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Movie } from '~/domain/models/Movie'
 import { useDateFormatter } from '~/composables/useDateFormatter'
-import { useScrollStore } from '~/store/scrollStore'
+import { useScrollStore } from '~/stores/useScrollStore'
 import { useImageUrl } from '~/composables/useImageUrl'
 import { useFormattedText } from '~/composables/useFormattedText'
 

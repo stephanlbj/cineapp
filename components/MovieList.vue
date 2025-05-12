@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { useMovieQuery } from '~/composables/useMovieQuery'
-import { useHydrationState } from '~/composables/useHydrationState'
+//import { useHydrationState } from '~/composables/useHydrationState'
 import CustomMessage from './CustomMessage.vue'
 import type { FetchOptions } from '~/types/fetchOptions'
+import { movieEndpoints } from '~/infrastructure/api/movieEndpoints'
 const config = useRuntimeConfig()
 
 const loadMoreTrigger = ref(null)
@@ -17,15 +18,28 @@ const options: FetchOptions = {
 
 const { formattedPosts, fetchNextPage, hasNextPage, isFetching, refetch, isEmpty } = useMovieQuery(
   options,
-  config.public.apiBaseUrl,
+  config.public.apiBaseUrl + movieEndpoints.popular,
 )
 const { isLoadingMore } = useInfiniteScroll(loadMoreTrigger, hasNextPage, isFetching, fetchNextPage)
-const { isHydrated } = useHydrationState()
+//const { isHydrated } = useHydrationState()
+const isClientHydrated = ref(false)
+
+onMounted(() => {
+  // Hydratation complète côté client
+  isClientHydrated.value = true
+})
+const isLoading = computed(() => {
+  // Si le client n'est pas encore hydraté
+  if (!isClientHydrated.value) return true
+
+  // Si les données ne sont pas encore là et que le fetch est en cours
+  return isFetching && formattedPosts.value.length === 0
+})
 </script>
 
 <template>
   <main class="w-full">
-    <div v-if="!isHydrated" class="skeleton-wrapper">
+    <div v-if="isLoading" class="skeleton-wrapper">
       <SkeletonLoader v-for="n in 10" :key="n" />
     </div>
 
@@ -47,17 +61,20 @@ const { isHydrated } = useHydrationState()
         </ul>
       </section>
 
-      <div v-if="isLoadingMore" class="infinite-skeleton-wrapper">
-        <SkeletonLoader v-for="n in 5" :key="n" />
+      <div v-if="isLoadingMore" class="skeleton-wrapper">
+        <SkeletonLoader v-for="n in 10" :key="n" />
       </div>
 
-      <!-- Trigger pour le scroll infini -->
       <div v-show="hasNextPage" ref="loadMoreTrigger" class="load-more-trigger" />
     </div>
   </main>
 </template>
 
 <style lang="scss" scoped>
+[v-cloak] {
+  display: none;
+}
+
 .posts-section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));

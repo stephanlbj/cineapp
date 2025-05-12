@@ -4,7 +4,7 @@ import { ref } from 'vue'
 import type { MovieDetailsResponse } from '~/domain/models/Movie'
 import { useImageUrl } from '~/composables/useImageUrl'
 import { useMovieStore } from '~/stores/useMovieStore'
-import CommentComponent from '~/components/CommentComponent.vue'
+import FormComponent from '~/components/FormComponent.vue'
 import CommentList from '~/components/CommentList.vue'
 
 const route = useRoute()
@@ -156,7 +156,7 @@ const goBack = () => {
           </div>
         </template>
         <CommentList :movie-id="movieId" />
-        <CommentComponent :movie-id="movieId" />
+        <FormComponent :movie-id="movieId" />
       </ClientOnly>
     </div>
 

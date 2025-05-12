@@ -29,5 +29,6 @@ export default defineNuxtConfig({
     '@hebilicious/vue-query-nuxt',
     '@vueuse/motion/nuxt',
     '@pinia/nuxt',
+    '@nuxt/icon',
   ],
 })

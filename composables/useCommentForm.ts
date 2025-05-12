@@ -16,7 +16,7 @@ export function useCommentForm(movieId: number) {
   const formData: Ref<FormData> = ref({
     username: '',
     message: '',
-    movieRating: null,
+    movieRating: 0,
   })
   const formRef = ref<VForm | null>(null)
 
@@ -30,7 +30,7 @@ export function useCommentForm(movieId: number) {
     messageRules.every((rule) => rule(formData.value.message) === true),
   )
   const isRatingValid = computed(() =>
-    ratingRules.every((rule) => rule(formData.value.movieRating as number) === true),
+    ratingRules.every((rule) => rule(formData.value.movieRating) === true),
   )
 
   const isFormValid = computed(
@@ -62,7 +62,7 @@ export function useCommentForm(movieId: number) {
     userName.addUserName(formData.value.username)
     toast.success('Commentaire ajouté avec succès !')
     formRef.value?.resetValidation()
-    formData.value = { username: userName.username || '', message: '', movieRating: null }
+    formData.value = { username: userName.username || '', message: '', movieRating: 0 }
     isLoading.value = false
     isUsernameLocked.value = !!userName.username
   }

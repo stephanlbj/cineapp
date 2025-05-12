@@ -21,7 +21,7 @@ export function useValidationRules() {
   ]
 
   const ratingRules = [
-    (value: number) => value !== null || 'La note du film est requise.',
+    (value: number) => value !== 0 || 'La note du film est requise.',
     (value: number) =>
       (Number.isInteger(value) && value >= 1 && value <= 10) ||
       'La note doit être un nombre entier entre 1 et 10.',

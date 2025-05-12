@@ -9,5 +9,5 @@ export interface Comment {
 export interface FormData {
   username: string
   message: string
-  movieRating: number | null
+  movieRating: number
 }

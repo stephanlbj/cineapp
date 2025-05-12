@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useCommentForm } from '~/composables/useCommentForm'
+import CustomTextarea from './CustomTextarea.vue'
+import CustomInputField from '~/components/CustomInputField.vue'
 
 const props = defineProps({
   movieId: {
@@ -31,7 +33,7 @@ const {
               <v-card-title>Commentaires</v-card-title>
               <v-card-text>
                 <v-form ref="formRef" @submit.prevent="onSubmit">
-                  <v-text-field
+                  <CustomInputField
                     v-model="formData.username"
                     label="Nom d'utilisateur:"
                     type="text"
@@ -41,7 +43,7 @@ const {
                     :disabled="isUsernameLocked"
                   />
 
-                  <v-textarea
+                  <CustomTextarea
                     v-model="formData.message"
                     label="Message"
                     type="text"
@@ -49,7 +51,7 @@ const {
                     :rules="messageRules"
                   />
 
-                  <v-text-field
+                  <CustomInputField
                     v-model.number="formData.movieRating"
                     label="Note du film (1-10):"
                     type="number"

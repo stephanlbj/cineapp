@@ -50,7 +50,11 @@ const goBack = () => {
     <button class="back-button" aria-label="Retour à la liste des films" @click="goBack">
       ⬅️ Retour
     </button>
-    <CustomMessage v-if="pending" text-props="Loading data..." />
+    <CustomMessage
+      v-if="pending"
+      text-props="Chargement..."
+      style-props="text-gray-600 italic text-center flex justify-center text-2xl"
+    />
     <div v-else-if="data">
       <div
         class="relative bg-gray-100 px-4 py-4 grid gap-4 md:grid-cols-3 w-full opacity-90 rounded-lg mb-10 shadow-2xl"

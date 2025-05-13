@@ -10,6 +10,7 @@ const { formatDate } = useDateFormatter()
 
 const props = defineProps<{
   movie: Movie
+  index: number
 }>()
 
 const saveScrollPosition = () => {
@@ -43,7 +44,7 @@ const formattedTitle = useFormattedText(props.movie.title)
         densities="1x, 2x"
         format="webp"
         quality="80"
-        loading="lazy"
+        :loading="index < 8 ? 'eager' : 'lazy'"
       />
       <div class="hover-overlay">
         <p class="full-title">{{ props.movie.title }}</p>

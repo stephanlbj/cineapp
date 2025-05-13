@@ -26,15 +26,13 @@ const { isLoadingMore: loadingMore } = useInfiniteScroll(
 
 <template>
   <main class="w-full">
-    <div v-if="isLoading" class="skeleton-wrapper">
-      <SkeletonLoader v-for="n in 10" :key="n" />
-    </div>
+    <SkeletonLoader v-if="isLoading" :is-list="true" :count="10" />
 
     <div v-else>
       <div v-if="isEmpty" class="no-results">
         <CustomMessage text-props="Aucun post trouvé" />
       </div>
-      <section v-else>
+      <section v-else class="posts-section">
         <ul class="posts-section">
           <li
             v-for="(movie, index) in props.movies"
@@ -47,9 +45,7 @@ const { isLoadingMore: loadingMore } = useInfiniteScroll(
         </ul>
       </section>
 
-      <div v-if="loadingMore" class="skeleton-wrapper">
-        <SkeletonLoader v-for="n in 10" :key="n" />
-      </div>
+      <SkeletonLoader v-if="loadingMore" :is-list="true" :count="10" />
 
       <div v-show="hasNextPage" ref="loadMoreTrigger" class="load-more-trigger" />
     </div>
@@ -57,21 +53,9 @@ const { isLoadingMore: loadingMore } = useInfiniteScroll(
 </template>
 
 <style lang="scss" scoped>
-[v-cloak] {
-  display: none;
-}
-
 .posts-section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1.5rem;
-  padding: 0;
-  margin: 2rem 1rem;
-}
-
-.skeleton-wrapper {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   gap: 1.5rem;
   padding: 0;
   margin: 2rem 1rem;

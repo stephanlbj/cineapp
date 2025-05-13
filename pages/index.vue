@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useDebounce } from '@vueuse/core'
 import CustomFallBack from '~/components/CustomFallBack.vue'
 import PopularMovie from '~/components/PopularMovie.vue'
 import SearchedMovie from '~/components/SearchedMovie.vue'

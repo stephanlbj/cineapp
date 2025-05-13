@@ -25,6 +25,7 @@ const formattedTitle = useFormattedText(props.movie.title)
 
 <template>
   <NuxtLink
+    v-if="movie && movie.id && movie.title && movie.release_date && imageUrl"
     :to="`/movie/${props.movie.id}`"
     class="movie-card"
     aria-label="Détails du film {{ props.movie.title }}"
@@ -42,6 +43,7 @@ const formattedTitle = useFormattedText(props.movie.title)
         densities="1x, 2x"
         format="webp"
         quality="80"
+        loading="lazy"
       />
       <div class="hover-overlay">
         <p class="full-title">{{ props.movie.title }}</p>

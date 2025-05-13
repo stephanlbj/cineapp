@@ -1,4 +1,4 @@
-import { onMounted, ref, watch, onUnmounted, type Ref } from 'vue'
+import { onMounted, ref, onUnmounted, type Ref } from 'vue'
 import type { InfiniteQueryObserverResult } from '@tanstack/vue-query'
 
 export function useInfiniteScroll(
@@ -35,13 +35,28 @@ export function useInfiniteScroll(
     observer.value.observe(loadMoreTrigger.value)
   }
 
+  // onMounted(() => {
+  //   if (import.meta.client) {
+  //     watch(loadMoreTrigger, (el) => {
+  //       if (el) {
+  //         observeElement()
+  //       }
+  //     })
+  //   }
+  // })
+
   onMounted(() => {
     if (import.meta.client) {
-      watch(loadMoreTrigger, (el) => {
-        if (el) {
-          observeElement()
-        }
-      })
+      if (loadMoreTrigger.value) {
+        observeElement()
+      } else {
+        // ⏳ Attendre un peu si l'élément n'est pas monté encore
+        setTimeout(() => {
+          if (loadMoreTrigger.value) {
+            observeElement()
+          }
+        }, 100)
+      }
     }
   })
 

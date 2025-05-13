@@ -21,6 +21,7 @@ export const MovieService = {
     query: string,
   ): Promise<MoviePage> {
     if (!query) return {} as MoviePage
+
     if (!options.params) {
       options.params = {}
     }

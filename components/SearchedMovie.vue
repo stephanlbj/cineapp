@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { FetchOptions } from '~/types/fetchOptions'
 import { movieEndpoints } from '~/infrastructure/api/movieEndpoints'
+import { useQueryClient } from '@tanstack/vue-query'
 
-const props = defineProps<{
+const { searchQuery } = defineProps<{
   searchQuery: string
 }>()
 
@@ -15,29 +16,37 @@ const options: FetchOptions = {
     language: 'fr-FR',
   },
 }
+const queryClient = useQueryClient()
 
-const url = ref(config.public.apiBaseUrl + movieEndpoints.search + props.searchQuery)
+const queryKey = computed(() => ['movies-search', searchQuery])
+const url = computed(() => {
+  const urlValue = config.public.apiBaseUrl + movieEndpoints.search + searchQuery
+  return urlValue
+})
+
+const extractedSearchQuery = computed(() => {
+  const urlParams = new URLSearchParams(url.value.split('?')[1])
+  const extractedQuery = urlParams.get('query')
+  return extractedQuery || ''
+})
 
 const { formattedPosts, fetchNextPage, hasNextPage, isFetching, isEmpty, refetch } =
-  useMovieSearchQuery(url.value, options, props.searchQuery)
-const isClientHydrated = ref(false)
+  useMovieSearchQuery(url.value, options, extractedSearchQuery.value)
 
-onMounted(() => {
-  isClientHydrated.value = true
-})
 const isLoading = computed(() => {
-  if (!isClientHydrated.value) return true
-
   return isFetching && formattedPosts.value.length === 0
 })
 
-watch(
-  () => props.searchQuery,
-  async (newQuery) => {
-    url.value = config.public.apiBaseUrl + movieEndpoints.search + newQuery
+watch(url, async (newURl) => {
+  if (!newURl.trim()) {
+    return
+  }
+  const query = newURl.split('?')[1]
+  if (url.value !== query) {
+    await queryClient.invalidateQueries({ queryKey: queryKey.value })
     await refetch()
-  },
-)
+  }
+})
 </script>
 <template>
   <main class="w-full">

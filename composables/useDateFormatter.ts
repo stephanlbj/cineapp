@@ -1,8 +1,14 @@
-import { format } from 'date-fns'
+import { format, isValid } from 'date-fns'
 
 export function useDateFormatter() {
   const formatDate = (date: string | number | Date, dateFormat = 'MMM dd, yyyy') => {
-    return format(new Date(date), dateFormat)
+    const parsedDate = new Date(date)
+
+    if (!isValid(parsedDate)) {
+      return 'Date inconnue'
+    }
+
+    return format(parsedDate, dateFormat)
   }
 
   return { formatDate }

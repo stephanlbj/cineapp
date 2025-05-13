@@ -13,7 +13,7 @@ const options: FetchOptions = {
   },
 }
 
-const { formattedPosts, fetchNextPage, hasNextPage, isFetching, isEmpty } = useMovieQuery(
+const { formattedPosts, fetchNextPage, hasNextPage, isFetching, isEmpty, error } = useMovieQuery(
   options,
   config.public.apiBaseUrl + movieEndpoints.popular,
 )
@@ -38,5 +38,7 @@ const isLoading = computed(() => {
       :has-next-page="hasNextPage"
       :is-fetching="isFetching"
     />
+
+    <CustomMessage v-if="error" text-props="Une erreur est survenue" />
   </main>
 </template>

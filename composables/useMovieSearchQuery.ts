@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/vue-query'
 import { MovieService } from '~/application/services/MovieService'
-import type { MoviePage } from '~/domain/models/Movie'
+import type { Movie, MoviePage } from '~/domain/models/Movie'
 import type { FetchOptions } from '~/types/fetchOptions'
 
 export function useMovieSearchQuery(
@@ -8,25 +8,35 @@ export function useMovieSearchQuery(
   optionsWithConfig: FetchOptions,
   searchQuery: string,
 ) {
+  const key = new URLSearchParams(url.split('?')[1]).get('query') || ''
+  const queryKey = ['movies-search', key]
+
   const { data, fetchNextPage, hasNextPage, isFetching, error, refetch } = useInfiniteQuery<
     MoviePage,
     Error
   >({
-    queryKey: ['movies-search', searchQuery],
+    queryKey,
     queryFn: async ({ pageParam = 1 }) => {
-      const page = typeof pageParam === 'number' ? pageParam : 1
-      return await MovieService.searchMovies(page, url, optionsWithConfig, searchQuery)
+      try {
+        const page = typeof pageParam === 'number' ? pageParam : 1
+        return await MovieService.searchMovies(page, url, optionsWithConfig, searchQuery)
+      } catch (error) {
+        console.error("Erreur lors de l'appel API :", error)
+        throw error
+      }
     },
     getNextPageParam: (lastPage, pages) => {
       return pages.length < lastPage.total_pages ? pages.length + 1 : undefined
     },
-
     staleTime: 1000 * 60 * 5,
     initialPageParam: 1,
+    enabled: !!key,
   })
 
-  const formattedPosts = computed(() => {
-    return data?.value?.pages?.flatMap((page) => page?.results) ?? []
+  const formattedPosts = computed<Movie[]>(() => {
+    return (data.value?.pages ?? [])
+      .flatMap((page) => page?.results ?? [])
+      .map((item) => JSON.parse(JSON.stringify(item)))
   })
 
   const isEmpty = computed(() => formattedPosts.value.length === 0 && !isFetching.value)

@@ -8,8 +8,9 @@ export function useMovieSearchQuery(
   optionsWithConfig: FetchOptions,
   searchQuery: string,
 ) {
-  const key = new URLSearchParams(url.split('?')[1]).get('query') || ''
-  const queryKey = ['movies-search', key]
+  const searchValue = ref(searchQuery)
+
+  const queryKey = computed(() => ['movies-search', searchValue.value])
 
   const { data, fetchNextPage, hasNextPage, isFetching, error, refetch } = useInfiniteQuery<
     MoviePage,
@@ -30,7 +31,7 @@ export function useMovieSearchQuery(
     },
     staleTime: 1000 * 60 * 5,
     initialPageParam: 1,
-    enabled: !!key,
+    enabled: computed(() => searchQuery.trim().length > 0).value,
   })
 
   const formattedPosts = computed<Movie[]>(() => {

@@ -29,7 +29,7 @@ const { isLoadingMore: loadingMore } = useInfiniteScroll(
     <SkeletonLoader v-if="isLoading" :is-list="true" :count="10" />
 
     <div v-else>
-      <div v-if="isEmpty" class="no-results">
+      <div v-if="isEmpty && props.movies.length === 0" class="no-results">
         <CustomMessage text-props="Aucun post trouvé" />
       </div>
       <section v-else class="posts-section">

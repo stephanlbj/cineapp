@@ -1,75 +1,108 @@
-# Nuxt Minimal Starter
+🎬 Projet Nuxt 3 - Interface Cinéma avec TMDB
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+📌 Description
+Ce projet est une interface de films construite avec Nuxt 3, utilisant Vue Query pour la gestion des requêtes API, et une approche Domain-Driven Design (DDD) pour une meilleure organisation du code. Il comporte :
 
-## Setup
+Une page de liste de films avec défilement infini et filtre de recherche dynamique.
 
-Make sure to install dependencies:
+Une page de détails affichant des informations détaillées sur chaque film.
 
-```bash
-# npm
+Un système de commentaires stockés en localStorage, avec validation stricte et tri du plus récent au plus ancien.
+
+Ce projet est optimisé pour le SSR avec préfetch, afin d'éviter une double requête pour la première page en CSR et d'hydrater correctement le client.
+
+🚀 Technologies utilisées
+🔧 Framework & UI
+NuxtJS 3 (SSR + Hydratation côté client)
+
+Vue Query (Gestion optimisée des requêtes API + Cache)
+
+VueUse (Utilitaires réactifs avancés)
+
+Vuelidate / VeeValidate (Validation des formulaires)
+
+Pinia (Gestion d'état avancée)
+
+Vuetify (Optionnel, UI améliorée)
+
+SCSS + Tailwind CSS (Styling & animations)
+
+🧪 Tests & Qualité
+Vitest + Nock (Tests unitaires et mocks API)
+
+ESLint, Prettier, Stylelint (Linting et qualité du code)
+
+Husky & lint-staged (Automatisation des checks avant commit)
+
+🛠️ Installation & Configuration
+1️⃣ Cloner le projet
+
+git clone https://github.com/stephanlbj/cineapp.git
+cd votre-repo
+2️⃣ Installation des dépendances
+
 npm install
+3️⃣ Configuration des variables d’environnement
+Crée un fichier .env à la racine avec :
 
-# pnpm
-pnpm install
+env
+NUXT_PUBLIC_TMDB_API_KEY=VOTRE_CLE_API
+NUXT_PUBLIC_API_BASE_URL=https://api.themoviedb.org/3
 
-# yarn
-yarn install
+🖥️ Lancement du projet
 
-# bun
-bun install
-```
+Mode développement
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
 npm run dev
 
-# pnpm
-pnpm dev
+Build et lancement en production
 
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
 npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
 npm run preview
 
-# pnpm
-pnpm preview
+Lint & Format
 
-# yarn
-yarn preview
+npm run lint
+npm run format
 
-# bun
-bun run preview
-```
+Exécution des tests
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+npm run test
+
+📄 Structure du projet
+📂 src/
+├── 📂 domain/ # Modèles et logiques métier (DDD)
+├── 📂 application/ # Services et cas d'utilisation métier
+├── 📂 infrastructure/ # API externe, persistance, store
+├── 📂 components/ # Composants Vue réutilisables
+├── 📂 pages/ # Pages Nuxt générées automatiquement
+├── 📂 composables/ # Fonctions réactives globales
+
+├── nuxt.config.ts # Configuration Nuxt
+
+🎬 Fonctionnalités
+📌 Page Liste des films
+✅ Défilement infini avec Vue Query ✅ Filtre de recherche dynamique ✅ Préfetch en SSR pour hydrater le client sans double requête
+
+📜 Page Détail d’un film
+✅ Affiche le titre, synopsis, réalisateur, acteurs, note, etc. ✅ Gestion des erreurs avec useErrorHandler()
+
+💬 Système de commentaires
+✅ Stockage en localStorage avec validation stricte ✅ Tri des commentaires du plus récent au plus ancien
+
+🧪 Tests
+✅ Tests unitaires
+Exécutés avec Vitest, et Nock pour mocker les appels API.
+
+npm run test
+✅ Lint & Formatting
+Assure la qualité du code avec ESLint, Prettier, Stylelint.
+
+npm run lint
+💡 Améliorations possibles
+
+Ajouter Vuetify pour une meilleure gestion des composants UI.
+
+Intégrer TinyMCE comme éditeur WYSIWYG pour les commentaires.
+
+Améliorer l’accessibilité et les animations avec VueUse Motion.

@@ -52,8 +52,9 @@ npm install
 Crée un fichier .env à la racine avec :
 
 env
-NUXT_PUBLIC_TMDB_API_KEY=VOTRE_CLE_API
-NUXT_PUBLIC_API_BASE_URL=https://api.themoviedb.org/3
+NUXT_TMDB_API_KEY=
+NUXT_TMDB_ACCESS_TOKEN=
+NUXT_API_URL =https://api.themoviedb.org/3
 
 
 🖥️ Lancement du projet

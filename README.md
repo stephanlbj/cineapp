@@ -35,19 +35,26 @@ ESLint, Prettier, Stylelint (Linting et qualité du code)
 Husky & lint-staged (Automatisation des checks avant commit)
 
 🛠️ Installation & Configuration
+
 1️⃣ Cloner le projet
+
 
 git clone https://github.com/stephanlbj/cineapp.git
 cd votre-repo
+
+
 2️⃣ Installation des dépendances
 
 npm install
+
+
 3️⃣ Configuration des variables d’environnement
 Crée un fichier .env à la racine avec :
 
 env
 NUXT_PUBLIC_TMDB_API_KEY=VOTRE_CLE_API
 NUXT_PUBLIC_API_BASE_URL=https://api.themoviedb.org/3
+
 
 🖥️ Lancement du projet
 
@@ -69,6 +76,8 @@ Exécution des tests
 
 npm run test
 
+
+
 📄 Structure du projet
 📂 src/
 ├── 📂 domain/ # Modèles et logiques métier (DDD)
@@ -83,6 +92,7 @@ npm run test
 🎬 Fonctionnalités
 📌 Page Liste des films
 ✅ Défilement infini avec Vue Query ✅ Filtre de recherche dynamique ✅ Préfetch en SSR pour hydrater le client sans double requête
+
 
 📜 Page Détail d’un film
 ✅ Affiche le titre, synopsis, réalisateur, acteurs, note, etc. ✅ Gestion des erreurs avec useErrorHandler()

@@ -53,7 +53,9 @@ Crée un fichier .env à la racine avec :
 
 env
 NUXT_TMDB_API_KEY=
+
 NUXT_TMDB_ACCESS_TOKEN=
+
 NUXT_API_URL =https://api.themoviedb.org/3
 
 

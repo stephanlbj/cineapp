@@ -35,22 +35,11 @@ export function useInfiniteScroll(
     observer.value.observe(loadMoreTrigger.value)
   }
 
-  // onMounted(() => {
-  //   if (import.meta.client) {
-  //     watch(loadMoreTrigger, (el) => {
-  //       if (el) {
-  //         observeElement()
-  //       }
-  //     })
-  //   }
-  // })
-
   onMounted(() => {
     if (import.meta.client) {
       if (loadMoreTrigger.value) {
         observeElement()
       } else {
-        // ⏳ Attendre un peu si l'élément n'est pas monté encore
         setTimeout(() => {
           if (loadMoreTrigger.value) {
             observeElement()

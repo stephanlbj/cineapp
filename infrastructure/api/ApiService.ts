@@ -8,7 +8,7 @@ export const ApiService = {
       return response
     } catch (error: unknown) {
       if (error instanceof Error) {
-        throw new Error(`Erreur lors de la récupération des données: ${error.message}`)
+        throw new Error(`Erreur lors de la récupération des données`)
       } else {
         throw new Error('Erreur inconnue lors de la récupération des données.')
       }

@@ -30,5 +30,7 @@ export default defineNuxtConfig({
     '@vueuse/motion/nuxt',
     '@pinia/nuxt',
     '@nuxt/icon',
+    '@nuxt/test-utils/module',
   ],
+  test: true,
 })

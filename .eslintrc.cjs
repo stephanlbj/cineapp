@@ -4,6 +4,7 @@ export default {
     browser: true,
     node: true,
   },
+  plugins: ['vitest'],
   extends: ['eslint:recommended', 'plugin:vue/vue3-recommended', 'plugin:prettier/recommended'],
   parserOptions: {
     ecmaVersion: 2020,

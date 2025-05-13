@@ -42,6 +42,29 @@ const toggleOverview = () => {
   isOverviewExpanded.value = !isOverviewExpanded.value
 }
 
+watch(
+  () => ({
+    title: data.value?.title,
+    overview: data.value?.overview,
+    poster_path: data.value?.poster_path,
+  }),
+  ({ title, overview, poster_path }) => {
+    useHead({
+      title: title ?? 'Film inconnu',
+      meta: [
+        { name: 'description', content: overview ?? 'Aucune description disponible.' },
+        { property: 'og:title', content: title ?? 'Film inconnu' },
+        { property: 'og:description', content: overview ?? 'Aucune description disponible.' },
+        {
+          property: 'og:image',
+          content: poster_path ? `https://image.tmdb.org/t/p/w500${poster_path}` : undefined,
+        },
+      ],
+    })
+  },
+  { deep: true, immediate: true },
+)
+
 const goBack = () => {
   router.push('/')
 }

@@ -8,6 +8,33 @@ import SearchInput from '~/components/SearchInput.vue'
 const storedSearchQuery = useLocalStorage('searchQuery', '')
 
 const debouncedSearchQuery = useDebounce(storedSearchQuery, 500)
+watchEffect(() => {
+  useHead({
+    title: debouncedSearchQuery.value
+      ? `Résultats pour "${debouncedSearchQuery.value}"`
+      : 'Films populaires',
+    meta: [
+      {
+        name: 'description',
+        content: debouncedSearchQuery.value
+          ? `Découvrez les résultats de la recherche pour "${debouncedSearchQuery.value}".`
+          : 'Consultez les films populaires du moment.',
+      },
+      {
+        property: 'og:title',
+        content: debouncedSearchQuery.value
+          ? `Résultats pour "${debouncedSearchQuery.value}"`
+          : 'Films populaires',
+      },
+      {
+        property: 'og:description',
+        content: debouncedSearchQuery.value
+          ? `Voici les résultats pour "${debouncedSearchQuery.value}".`
+          : 'Consultez les films les plus regardés du moment.',
+      },
+    ],
+  })
+})
 </script>
 
 <template>

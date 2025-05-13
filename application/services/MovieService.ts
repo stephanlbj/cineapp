@@ -27,7 +27,9 @@ export const MovieService = {
     }
     options.params.page = page
 
-    const response = await ApiService.fetchData<MoviePage>(url, options)
+    const newUrl = url + query
+
+    const response = await ApiService.fetchData<MoviePage>(newUrl, options)
     return response
   },
 

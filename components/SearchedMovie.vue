@@ -2,10 +2,12 @@
 import type { FetchOptions } from '~/types/fetchOptions'
 import { movieEndpoints } from '~/infrastructure/api/movieEndpoints'
 import { useQueryClient } from '@tanstack/vue-query'
-
+import { useLocalStorage } from '@vueuse/core'
 const { searchQuery } = defineProps<{
   searchQuery: string
 }>()
+
+const storedSearchQuery = useLocalStorage('searchQuery', '')
 
 const config = useRuntimeConfig()
 
@@ -19,40 +21,25 @@ const options: FetchOptions = {
 const queryClient = useQueryClient()
 
 const queryKey = computed(() => ['movies-search', searchQuery])
-const url = computed(() => {
-  const urlValue = config.public.apiBaseUrl + movieEndpoints.search + searchQuery
-  return urlValue
-})
-
-const extractedSearchQuery = computed(() => {
-  const urlParams = new URLSearchParams(url.value.split('?')[1])
-  const extractedQuery = urlParams.get('query')
-  return extractedQuery || ''
-})
+const url = computed(() => config.public.apiBaseUrl + movieEndpoints.search)
 
 const { formattedPosts, fetchNextPage, hasNextPage, isFetching, isEmpty, refetch } =
-  useMovieSearchQuery(url.value, options, extractedSearchQuery.value)
+  useMovieSearchQuery(url.value, options)
 
-const isLoading = computed(() => {
-  return isFetching && formattedPosts.value.length === 0
-})
-
-watch(url, async (newURl) => {
-  if (!newURl.trim()) {
+watch(storedSearchQuery, async (newQuery) => {
+  if (!newQuery.trim()) {
     return
   }
-  const query = newURl.split('?')[1]
-  if (url.value !== query) {
-    await queryClient.invalidateQueries({ queryKey: queryKey.value })
-    await refetch()
-  }
+
+  await queryClient.invalidateQueries({ queryKey: queryKey.value })
+  await refetch()
 })
 </script>
 <template>
   <main class="w-full">
     <MovieList
       :movies="formattedPosts"
-      :is-loading="isLoading"
+      :is-loading="isFetching"
       :is-empty="isEmpty"
       :fetch-next-page="fetchNextPage"
       :has-next-page="hasNextPage"

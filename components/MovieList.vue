@@ -26,7 +26,7 @@ const { isLoadingMore: loadingMore } = useInfiniteScroll(
 
 <template>
   <main class="w-full">
-    <SkeletonLoader v-if="isLoading" :is-list="true" :count="10" />
+    <SkeletonLoader v-if="isFetching" :is-list="true" :count="10" />
 
     <div v-else>
       <div v-if="isEmpty && props.movies.length === 0" class="no-results">

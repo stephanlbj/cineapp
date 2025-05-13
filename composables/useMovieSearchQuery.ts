@@ -2,15 +2,12 @@ import { useInfiniteQuery } from '@tanstack/vue-query'
 import { MovieService } from '~/application/services/MovieService'
 import type { Movie, MoviePage } from '~/domain/models/Movie'
 import type { FetchOptions } from '~/types/fetchOptions'
+import { useLocalStorage } from '@vueuse/core'
 
-export function useMovieSearchQuery(
-  url: string,
-  optionsWithConfig: FetchOptions,
-  searchQuery: string,
-) {
-  const searchValue = ref(searchQuery)
+export function useMovieSearchQuery(url: string, optionsWithConfig: FetchOptions) {
+  const storedSearchQuery = useLocalStorage('searchQuery', '')
 
-  const queryKey = computed(() => ['movies-search', searchValue.value])
+  const queryKey = computed(() => ['movies-search', storedSearchQuery.value])
 
   const { data, fetchNextPage, hasNextPage, isFetching, error, refetch } = useInfiniteQuery<
     MoviePage,
@@ -20,7 +17,12 @@ export function useMovieSearchQuery(
     queryFn: async ({ pageParam = 1 }) => {
       try {
         const page = typeof pageParam === 'number' ? pageParam : 1
-        return await MovieService.searchMovies(page, url, optionsWithConfig, searchQuery)
+        return await MovieService.searchMovies(
+          page,
+          url,
+          optionsWithConfig,
+          storedSearchQuery.value,
+        )
       } catch (error) {
         console.error("Erreur lors de l'appel API :", error)
         throw error
@@ -31,7 +33,7 @@ export function useMovieSearchQuery(
     },
     staleTime: 1000 * 60 * 5,
     initialPageParam: 1,
-    enabled: computed(() => searchQuery.trim().length > 0).value,
+    enabled: computed(() => storedSearchQuery.value.trim().length > 0).value,
   })
 
   const formattedPosts = computed<Movie[]>(() => {

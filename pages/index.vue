@@ -1,16 +1,13 @@
 <script setup lang="ts">
-import { useDebounce } from '@vueuse/core'
+import { useDebounce, useLocalStorage } from '@vueuse/core'
 import CustomFallBack from '~/components/CustomFallBack.vue'
 import PopularMovie from '~/components/PopularMovie.vue'
 import SearchedMovie from '~/components/SearchedMovie.vue'
 import SearchInput from '~/components/SearchInput.vue'
 
-const searchQuery = ref('')
-const debouncedSearch = useDebounce(searchQuery, 500)
+const storedSearchQuery = useLocalStorage('searchQuery', '')
 
-const handleSearch = async (query: string) => {
-  searchQuery.value = query
-}
+const debouncedSearchQuery = useDebounce(storedSearchQuery, 500)
 </script>
 
 <template>
@@ -19,9 +16,9 @@ const handleSearch = async (query: string) => {
       <template #fallback>
         <CustomFallBack message="Chargement..." />
       </template>
-      <SearchInput @search="handleSearch" />
+      <SearchInput />
     </ClientOnly>
-    <PopularMovie v-if="!debouncedSearch" />
-    <SearchedMovie v-else :search-query="debouncedSearch" />
+    <PopularMovie v-if="!debouncedSearchQuery" />
+    <SearchedMovie v-else :search-query="debouncedSearchQuery" />
   </div>
 </template>

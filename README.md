@@ -107,12 +107,19 @@ npm run test
 ✅ Tests unitaires
 Exécutés avec Vitest, et Nock pour mocker les appels API.
 
-npm run test
+
+
+🛠️ npm run test
 ✅ Lint & Formatting
 Assure la qualité du code avec ESLint, Prettier, Stylelint.
 
 npm run lint
+
+
+
 💡 Améliorations possibles
+
+
 
 Ajouter Vuetify pour une meilleure gestion des composants UI.
 
